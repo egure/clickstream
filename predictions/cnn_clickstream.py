@@ -48,7 +48,8 @@ print("\nLoss: %.2f, Accuracy: %.2f%%" % (loss, accuracy*100))
 #print("Prediction Accuracy: %.2f%%" % (accuracy*100))
 
 # calculate predictions
-predictions = model.predict(X_train)
+predictions = model.predict(X_test)
 # round predictions
 rounded = [round(x[0]) for x in predictions]
-print(rounded)
+final = [x[0] for x in predictions]
+print(final)
