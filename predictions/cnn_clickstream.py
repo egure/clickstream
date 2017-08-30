@@ -1,3 +1,6 @@
+# PROBABILITY OF PURCHASE FOR THIS SESSION.
+# WE COULD ALSO REGISTER PROBABILITY OF PURCHASE FOR A GIVEN USER.
+
 #This CCN built to predict purchase intention
 
 # 1 - On one side, it measures impulse [speed of the click stream]
@@ -7,6 +10,10 @@ from keras.models import Sequential #this is the NN model type
 from keras.layers import Dense #layer types
 import numpy #matrix multiplication library
 numpy.random.seed(7) #this is used for
+
+def main():
+	if __name__ == '__main__':
+		main()
 
 # Builing the model:
   
@@ -51,5 +58,6 @@ print("\nLoss: %.2f, Accuracy: %.2f%%" % (loss, accuracy*100))
 predictions = model.predict(X_test)
 # round predictions
 rounded = [round(x[0]) for x in predictions]
-final = [x[0] for x in predictions]
-print(final)
+probability_of_purchas_for_this_session = [x[0] for x in predictions]
+print(probability_of_purchas_for_this_session)
+
