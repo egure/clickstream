@@ -1,0 +1,18 @@
+We use Deep learning to understand purchase impulse on a web session to trigger responses to maximize conversion. 
+
+DEEPLEARING MODEL FOR PREDICTION OF PURCHASE INTENTION
+
+The "predictions" folder contains a CNN (which uses ReLU for activation and Softmax for normalization) which takes the parameters of the session and predicts a probability of purchase (fixing that there are two sets of data, in the data folder - You can run it from your console).
+
+CHATBOT (IN PROGRESS)
+
+In "chatbot" is the chatbot tool that will trigger the loss of momentum. I took the codes of Github - because - not important is not the code but, the decision to use MN in the place of LSTM (as recommended in this article: https://arxiv.org/abs/1410.3916).
+
+DATA COLLECTION IN REAL TIME
+
+The data collection of the session, running fashion continuously with JS. If you enter in Boomfix.es you can see the process that runs continuously (records session duration and scroll interactions).
+
+WEB APP TO DISPLAY PRODUCT
+
+In the APP folder I am putting together the wrapper of the project that I will show you in my local (I use FLASK, for the speed that gives me for prototyping).
+
