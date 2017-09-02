@@ -1,88 +1,168 @@
-# https://developers.google.com/analytics/devguides/reporting/realtime/v3/reference/data/realtime/get?hl=es-419#examples
-#1. Create and Execute a Real Time Report
-# An application can request real-time data by calling the get method on the Analytics service object.
-# The method requires an ids parameter which specifies from which view (profile) to retrieve data.
-# For example, the following code requests real-time data for view (profile) ID 56789.
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# Copyright 2014 Google Inc. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
-try:
-  service.data().realtime().get(
-      ids='ga:159135697',
-      metrics='rt:activeUsers',
-      dimensions='rt:medium').execute()
+"""Simple intro to using the Google Analytics API v3.
 
-except TypeError, error:
-  # Handle errors in constructing a query.
-  print ('There was an error in constructing your query : %s' % error)
+This application demonstrates how to use the python client library to access
+Google Analytics data. The sample traverses the Management API to obtain the
+authorized user's first profile ID. Then the sample uses this ID to
+contstruct a Core Reporting API query to return the top 25 organic search
+terms.
 
-except HttpError, error:
-  # Handle API errors.
-  print ('Arg, there was an API error : %s : %s' %
-         (error.resp.status, error._get_reason()))
+Before you begin, you must sigup for a new project in the Google APIs console:
+https://code.google.com/apis/console
+
+Then register the project to use OAuth2.0 for installed applications.
+
+Finally you will need to add the client id, client secret, and redirect URL
+into the client_secrets.json file that is in the same directory as this sample.
+
+Sample Usage:
+
+  $ python hello_analytics_api_v3.py
+
+Also you can also get help on all the command-line flags the program
+understands by running:
+
+  $ python hello_analytics_api_v3.py --help
+"""
+from __future__ import print_function
+
+__author__ = 'api.nickm@gmail.com (Nick Mihailovski)'
+
+import argparse
+import sys
+
+from googleapiclient.errors import HttpError
+from googleapiclient import sample_tools
+from oauth2client.client import AccessTokenRefreshError
 
 
-# 2. Print out the Real-Time Data
-# The components of the report can be printed out as follows:
+def main(argv):
+  # Authenticate and construct service.
+  service, flags = sample_tools.init(
+      argv, 'analytics', 'v3', __doc__, __file__,
+      scope='https://www.googleapis.com/auth/analytics.readonly')
 
-def print_realtime_report(results):
-  print '**Real-Time Report Response**' 
-  print_report_info(results)
-  print_query_info(results.get('query'))
-  print_profile_info(results.get('profileInfo'))
-  print_column_headers(results.get('columnHeaders'))
-  print_data_table(results)
-  print_totals_for_all_results(results)
+  # Try to make a request to the API. Print the results or handle errors.
+  try:
+    first_profile_id = get_first_profile_id(service)
+    if not first_profile_id:
+      print('Could not find a valid profile for this user.')
+    else:
+      results = get_top_keywords(service, first_profile_id)
+      print_results(results)
 
-def print_data_table(results):
-  print 'Data Table:'
-  # Print headers.
+  except TypeError as error:
+    # Handle errors in constructing a query.
+    print(('There was an error in constructing your query : %s' % error))
+
+  except HttpError as error:
+    # Handle API errors.
+    print(('Arg, there was an API error : %s : %s' %
+           (error.resp.status, error._get_reason())))
+
+  except AccessTokenRefreshError:
+    # Handle Auth errors.
+    print ('The credentials have been revoked or expired, please re-run '
+           'the application to re-authorize')
+
+
+def get_first_profile_id(service):
+  """Traverses Management API to return the first profile id.
+
+  This first queries the Accounts collection to get the first account ID.
+  This ID is used to query the Webproperties collection to retrieve the first
+  webproperty ID. And both account and webproperty IDs are used to query the
+  Profile collection to get the first profile id.
+
+  Args:
+    service: The service object built by the Google API Python client library.
+
+  Returns:
+    A string with the first profile ID. None if a user does not have any
+    accounts, webproperties, or profiles.
+  """
+  accounts = service.management().accounts().list().execute()
+
+  if accounts.get('items'):
+    firstAccountId = accounts.get('items')[0].get('id')
+    webproperties = service.management().webproperties().list(
+        accountId=firstAccountId).execute()
+
+    if webproperties.get('items'):
+      firstWebpropertyId = webproperties.get('items')[0].get('id')
+      profiles = service.management().profiles().list(
+          accountId=firstAccountId,
+          webPropertyId=firstWebpropertyId).execute()
+
+      if profiles.get('items'):
+        return profiles.get('items')[0].get('id')
+
+  return None
+
+def get_top_keywords(service, profile_id):
+  """Executes and returns data from the Core Reporting API.
+
+  This queries the API for the top 25 organic search terms by visits.
+
+  Args:
+    service: The service object built by the Google API Python client library.
+    profile_id: String The profile ID from which to retrieve analytics data.
+
+  Returns:
+    The response returned from the Core Reporting API.
+  """
+  profile_id = "159135697"
+  return service.data().realtime().get(
+      ids='ga:' + profile_id,
+      metrics='rt:totalEvents',
+      dimensions='rt:eventAction,rt:eventLabel,rt:eventCategory', #'ga:source,ga:keyword',
+      max_results='25').execute()
+
+def print_results(results):
+  """Prints out the results.
+
+  This prints out the profile name, the column headers, and all the rows of
+  data.
+
+  Args:
+    results: The response returned from the Core Reporting API.
+  """
+
+  print()
+  print('Profile Name: %s' % results.get('profileInfo').get('profileName'))
+  print()
+
+  # Print header.
   output = []
   for header in results.get('columnHeaders'):
     output.append('%30s' % header.get('name'))
-  print ''.join(output)
-  # Print rows.
+  print(''.join(output))
+
+  # Print data table.
   if results.get('rows', []):
     for row in results.get('rows'):
       output = []
       for cell in row:
         output.append('%30s' % cell)
-      print ''.join(output)
+      print(''.join(output))
   else:
-    print 'No Results Found'
+    print('No Rows Found')
 
-def print_column_headers(headers):
-  print 'Column Headers:'
-  for header in headers:
-    print 'Column name           = %s' % header.get('name')
-    print 'Column Type           = %s' % header.get('columnType')
-    print 'Column Data Type      = %s' % header.get('dataType')
-
-def print_query_info(query):
-  if query:
-    print 'Query Info:'
-    print 'Ids                   = %s' % query.get('ids')
-    print 'Metrics:              = %s' % query.get('metrics')
-    print 'Dimensions            = %s' % query.get('dimensions')
-    print 'Sort                  = %s' % query.get('sort')
-    print 'Filters               = %s' % query.get('filters')
-    print 'Max results           = %s' % query.get('max-results')
-
-def print_profile_info(profile_info):
-  if profile_info:
-    print 'Profile Info:'
-    print 'Account ID            = %s' % profile_info.get('accountId')
-    print 'Web Property ID       = %s' % profile_info.get('webPropertyId')
-    print 'Profile ID            = %s' % profile_info.get('profileId')
-    print 'Profile Name          = %s' % profile_info.get('profileName')
-    print 'Table Id              = %s' % profile_info.get('tableId')
-
-def print_report_info(results):
-  print 'Kind                    = %s' % results.get('kind')
-  print 'ID                      = %s' % results.get('id')
-  print 'Self Link               = %s' % results.get('selfLink')
-  print 'Total Results           = %s' % results.get('totalResults')
-
-def print_totals_for_all_results(results):
-  totals = results.get('totalsForAllResults')
-  for metric_name, metric_total in totals.iteritems():
-    print 'Metric Name  = %s' % metric_name
-    print 'Metric Total = %s' % metric_total
+if __name__ == '__main__':
+  main(sys.argv)
