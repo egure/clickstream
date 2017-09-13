@@ -24,7 +24,7 @@ def main():
   #Step 1: load data using numpy.
 
 dataset = numpy.loadtxt("data/train_data.csv", delimiter=",")
-
+#dataset1 = numpy.loadtxt("data/63.csv")
   #Step 2: add labels, define model
 
 X_train = dataset[:,0:8]
