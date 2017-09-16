@@ -140,7 +140,7 @@ function queryCoreReportingApi(profileId, hello) {
       'dimensions':'rt:eventAction,rt:eventLabel,rt:eventCategory', 
       'max_results':'25'})
   .then(function(response) {  	
-    var formattedJson = JSON.stringify(response.result, null, 1);
+    var formattedJson = JSON.stringify(response.result.rows[0][1], null, );
     var dbObject = JSON.stringify(response.result, null, 1);
     document.getElementById('query-output').value = formattedJson;
     var hello = "3";

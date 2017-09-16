@@ -92,9 +92,9 @@ def product():
 #######################
 #                     #
 #######################
-@app.route('/results')
+@app.route('/real_time')
 def results():
-  return render_template("results.html", brand = brand)
+  return render_template("real_time.html", brand = brand)
     
 #######################
 #                     #
