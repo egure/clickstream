@@ -13,7 +13,7 @@ from __future__ import print_function
 #requests are objects that flask handles (get set post, etc)
 from flask import Flask, render_template,request
 #scientific computing library for saving, reading, and resizing images
-from scipy.misc import imsave, imread, imresize
+
 #for matrix math
 import numpy as np
 #for importing our keras model
@@ -28,16 +28,8 @@ import sys
 import os
 #tell our app where our saved model is
 sys.path.append(os.path.abspath("./model"))
-from load import * 
 #initalize our flask app
 app = Flask(__name__)
-#global vars for easy reusability
-global model, graph
-#initialize these variables
-model, graph = init()
-from flaskext.mysql import MySQL
-mysql = MySQL()
-mysql.init_app(app)
 import pandas as pd
 from googleapiclient.errors import HttpError
 from googleapiclient import sample_tools
@@ -93,7 +85,7 @@ def product():
 #                     #
 #######################
 @app.route('/real_time')
-def results():
+def real_time():
   return render_template("real_time.html", brand = brand)
     
 #######################
