@@ -76,44 +76,16 @@ def get_parameters(service, profile_id):
       max_results='25').execute()
 
 def print_results(results):
-  print()
   print('Profile Name: %s' % results.get('profileInfo').get('profileName'))
-  print()
   # Print header.
   output = []
-  #for header in results.get('columnHeaders'):
-  #  output.append('%30s' % header.get('name'))
-  #print(''.join(output))
-  # Print data table.
   if results.get('rows', []):
     output = []
     matrix = [('%s' % row[0],'%s' % row[1].replace('[','').replace(']','').split(",")[0],'%s' % row[1].replace('[','').replace(']','').split(",")[1] ) for row in results.get('rows')]
-    np.savetxt("../predictions/data/%s.csv" % row[1][1], matrix, fmt='%s', delimiter= ",")    
-    #matriz = pd.DataFrame(matrix)
-    #print(matriz) 
-    #print(matrix[0][1])
-    #print(matrix[:][0])
-      #row[1][1].replace('"','').replace('[','').replace(']','').split(","))
-      #output.append(row)
-      #df = pd.DataFrame(output)#.as_matrix()
-      #print(df)  
-      #parameter are the values we are going to use
-      #params = (df[1][0].replace('"','').replace('[','').replace(']','').split(",")) # make a new matrix with the values I care about
-      #asign each tuple element to a variabel
-      #url = params[0]
-      #if url == "http://boomfix.es/":
-      #  url = "1" 
-      #client_id = params[1]
-      #timex = params[2]
-      #a = [url, client_id, timex]
-      #print(a)
-      #for ow in a:
-      #np.savetxt("../predictions/data/%s.csv" % client_id, a, fmt='%s', delimiter= ";")
-
+    np.savetxt("../predictions/data/%s.csv" % row[1][1], matrix, fmt='%s', delimiter= ",")  
+    print(matrix)  
   else:
     print('No Rows Found')
-  #a = [0,0,0,1]
-  #np.savetxt('../predictions/data/data.csv',output, delimiter=',')
 
 if __name__ == '__main__':
   main(sys.argv)

@@ -38,9 +38,17 @@ model, graph = init()
 from flaskext.mysql import MySQL
 mysql = MySQL()
 mysql.init_app(app)
-from firebase import firebase as fb
-
-
+import pandas as pd
+from googleapiclient.errors import HttpError
+from googleapiclient import sample_tools
+from oauth2client.client import AccessTokenRefreshError
+import argparse
+import sys
+import collections
+import csv
+import numpy as np
+import pandas as pd 
+        
 #The DB connection will assume that the database has the same name as the Flask Appliction which is "app"
 app = Flask(__name__)
 mongo = PyMongo(app)
@@ -55,7 +63,6 @@ brand = "Messiac"
 url = "http://messiac.com"
 customer = "Boomfix.es"
 	
-
 #decoding an image from base64 into raw representation
 def convertImage(imgData1):
 	imgstr = re.search(r'base64,(.*)',imgData1).group(1)
@@ -82,22 +89,15 @@ def product():
 	os.system("python ../session_recorder/real_time.py;")
 	return render_template("demo.html", brand = brand, url=url, customer=customer)
 
-
 #######################
-#PROCESS PROBABILITIES#
+#                     #
 #######################
-
 @app.route('/results')
 def results():
-    #initModel()
-    #render out pre-built HTML file right on the index page
-    from firebase import firebase as fb
-    firebase = fb.FirebaseApplication('https://neem-fs.firebaseio.com', None)
-    results = firebase.get_async('/users', None, {'print': 'pretty'}, None)
-    return render_template("results.html", brand = brand, results=results)
-
+  return render_template("results.html", brand = brand)
+    
 #######################
-#UPLOAD FILE TO SERVER#
+#                     #
 #######################
 	
 #Store the CVS file with the data matrix
@@ -250,6 +250,6 @@ if __name__ == "__main__":
 	#decide what port to run the app in
 	port = int(os.environ.get('PORT', 5000))
 	#run the app locally on the givn port
-	app.run(host='0.0.0.0', port=port)
+	app.run(host='localhost', port=port)
 	#optional if we want to run in debugging mode
 	#app.run(debug=True)
