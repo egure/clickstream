@@ -140,8 +140,9 @@ function queryCoreReportingApi(profileId, hello) {
       'dimensions':'rt:eventAction,rt:eventLabel,rt:eventCategory', 
       'max_results':'25'})
   .then(function(response) {  	
-    var formattedJson = JSON.stringify(response.result.rows[0][1], null, );
-    var dbObject = JSON.stringify(response.result, null, 1);
+    var formattedJson1 = JSON.stringify(response.result.rows[0], null, 3);
+    var formattedJson = JSON.stringify(response.result.rows, null, 3);
+    var dbObject = response.result.rows;
     document.getElementById('query-output').value = formattedJson;
     var hello = "3";
   // Initialize Firebase
