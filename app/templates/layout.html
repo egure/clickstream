@@ -27,12 +27,10 @@
 
     <!--  Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
+
     <link href='https://fonts.googleapis.com/css?family=Muli:400,300' rel='stylesheet' type='text/css'>
     
     <link href={{ url_for('static', filename='css/themify-icons.css') }} rel="stylesheet" />
-
-<!--    <script src={{url_for('static', filename='js/app.js') }} type="text/javascript"> </script>-->
-
 
 </head>
 
@@ -43,10 +41,7 @@
 <!-- ACA EMPIEZA EL MENU DE LA IZQUIERADA, JUSTO DESPUES DE WRAPPER -->
 
 	    <div class="sidebar" data-background-color="brown" data-active-color="danger">
-	    <!--
-			Tip 1: you can change the color of the sidebar's background using: data-background-color="white | brown"
-			Tip 2: you can change the color of the active button using the data-active-color="primary | info | success | warning | danger"
-		-->
+	   
 			<div class="logo">
 				<a href="{{url}}" class="simple-text">
 					{{brand}}
@@ -79,59 +74,40 @@
 	            </div>
 	            <ul class="nav">
 	            	<li>
-						<a data-toggle="collapse" href="prediktor/real_time">
-							<i class="ti-user"></i>
-							<p>Probability in real time
-							   <b class="caret"></b>
-							</p>
-						</a>
-						<!--
-						<div class="collapse" id="componentsExamples">
-							<ul class="nav">
-							   <li><a href="/prediction"> Probabilities </a></li>
-							</ul>
-						</div>
-						s-->
-					</li> 
-	                
-
-	                <li>
-						<a data-toggle="collapse" href="prediktor/list">
+						<a data-toggle="collapse" href="#tablesExamples">
 	                        <i class="ti-view-list-alt"></i>
 	                        <p>
-								Historical data
+								Real time
 	                           <b class="caret"></b>
 	                        </p>
 	                    </a>
-	                    <!--
 	                    <div class="collapse" id="tablesExamples">
 	                        <ul class="nav">
-								<li><a href="/call_list">Test data </a></li>
-	                        	<li><a href="/call_list">Training data</a></li>
+	                        	<li><a href="real_time">Real time data</a></li>
 	                        </ul>
 	                    </div>
-	                -->
-	                </li>
-
-	                <li>
-						<a data-toggle="collapse" href="prediktor/trainig_data">
-	                        <i class="ti-view-list-alt"></i>
+	                </li> 					
+					<li>
+						<a data-toggle="collapse" href="#pagesExamples">
+	                        <i class="ti-settings"></i>
 	                        <p>
-								Training data
+								Deep learning
 	                           <b class="caret"></b>
 	                        </p>
 	                    </a>
-	                    <!--
-	                    <div class="collapse" id="tablesExamples">
-	                        <ul class="nav">
-								<li><a href="/call_list">Test data </a></li>
-	                        	<li><a href="/call_list">Training data</a></li>
+	                    <div class="collapse" id="pagesExamples">
+	                        <ul class="nav-second-level nav">
+								<li><a href="list">Session probability</a></li>
+								<li><a href="training_data">Training data</a></li>
+							<!--
+								<li><a href="../pages/timeline.html">Timeline Page</a></li>
+								<li><a href="../pages/login.html">Login Page</a></li>
+								<li><a href="../pages/register.html">Register Page</a></li>
+								<li><a href="../pages/lock.html">Lock Screen Page</a></li>
+							-->
 	                        </ul>
 	                    </div>
-	                -->
-	                </li>
-
-
+	                </li>           
 	            </ul>
 	    	</div>
 	    </div>
@@ -166,30 +142,7 @@
 	    				</form>
 -->
 	                    <ul class="nav navbar-nav navbar-right">
-<!--	                        <li>
-	                            <a href="#stats" class="dropdown-toggle btn-magnify" data-toggle="dropdown">
-	                                <i class="ti-panel"></i>
-									<p>Stats</p>
-	                            </a>
-	                        </li>
-	                        <li class="dropdown">
-	                            <a href="#notifications" class="dropdown-toggle btn-rotate" data-toggle="dropdown">
-	                                <i class="ti-bell"></i>
-	                                <span class="notification">0</span>
-									<p class="hidden-md hidden-lg">
-										Notifications
-										<b class="caret"></b>
-									</p>
-	                            </a>
-	                            <ul class="dropdown-menu">
-	                                <li><a href="#not1">Notification 1</a></li>
-	                                <li><a href="#not2">Notification 2</a></li>
-	                                <li><a href="#not3">Notification 3</a></li>
-	                                <li><a href="#not4">Notification 4</a></li>
-	                                <li><a href="#another">Another notification</a></li>
-	                            </ul>
-	                        </li>
--->
+
 							<li>
 	                            <a href="#settings" class="btn-rotate">
 									<i class="ti-settings"></i>

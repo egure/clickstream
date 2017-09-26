@@ -72,7 +72,7 @@ def index():
 	#render out pre-built HTML file right on the index page
 	return render_template("home.html", brand = brand)
 	
-@app.route('/prediktor')
+@app.route('/1112/prediktor')
 def product():
 	#initModel()
 	brand = "Messiac"
@@ -83,7 +83,7 @@ def product():
 #######################
 #  VIEW IN REAL TIME  #
 #######################
-@app.route('/prediktor/real_time')
+@app.route('/1112/prediktor/real_time')
 def real_time():
   return render_template("real_time.html", brand = brand)
 
@@ -91,7 +91,7 @@ def real_time():
 #######################
 #    HISTORIC VIEW    #
 #######################
-@app.route('/prediktor/list')
+@app.route('/1112/prediktor/list')
 def list():
   return render_template("list.html", brand = brand)
 	
@@ -99,7 +99,7 @@ def list():
 #######################
 #    TRAINING DATA    #
 #######################
-@app.route('/prediktor/training_data')
+@app.route('/1112/prediktor/training_data')
 def training_data():
   return render_template("training_data.html", brand = brand)
    

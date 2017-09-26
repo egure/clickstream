@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<script src="https://www.gstatic.com/firebasejs/3.6.3/firebase.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.5.2/firebase.js"></script>
 
 	        <div class="content">
 	            <div class="container-fluid">
@@ -22,18 +22,19 @@
 										<table id="datatables" class="table table-striped table-no-bordered table-hover" cellspacing="0" width="100%" style="width:100%">
 										<thead>
 											<tr>
-												<th>User Id</th>
-												<th>Browser Id </th>
-												<th>Duration</th>
-
-											    <th>Click count</th>
-
-												<th class="disabled-sorting">Actions</th>
+												<th>Date</th>
+                        <th>User Id</th>
+                        <th>Browser Id </th>
+                        <th>Duration</th>
+                        <th>Scroll depth</th>
+                        <th>Click count</th>
+                        <th class="disabled-sorting">Probability</th>
 											</tr>
 										</thead>
 										<tfoot>
 <script>
     				(function(){
+                      //if database is empty this function will return error
                       var config = {
                         apiKey: "AIzaSyDUkZoY9nE97BRl1eGDWGuTdfnJX9X960c",
                         authDomain: "neem-fs.firebaseapp.com",
@@ -45,40 +46,43 @@
                       //firebase.initializeApp(config);
                       firebase.initializeApp(config);
                       var database = firebase.database();
-                      var ref = database.ref('object');
+                      var ref = database.ref('selection');
                       ref.on('value', gotData, errData);
                       function gotData(data){
                       var registers = data.val();
                       var keys = Object.keys(registers);
                       for (var i = 0; i < keys.length; i++){
                         var k = keys[i];
+                        var date = registers[k].date;
                         var clientId = registers[k].clientId;
                         var userId = registers[k].userId;
                         var timer = registers[k].timer;
-                        if (timer == 0) {timer = 1};
+                        if (timer == "") {timer = 1};
                         var mouseMax = registers[k].mouseMax;
-                        if (mouseMax == 0) {mouseMax = 100};                       
+                        if (mouseMax == "") {mouseMax = 0};                       
                         var clickCount = registers[k].clickCount;
-                        if (clickCount == 0) {clickCount = 1};
+                        if (clickCount == "") {clickCount = 1};
                         var objective = registers[k].objective;
-                        if (objective == 0)
+                        if (objective == "") {objective = 0};
                         var tbl = document.getElementById("lista");
                         var tr = tbl.insertRow();
-                		tr.insertCell().appendChild(document.createTextNode(userId));
-                		tr.insertCell().appendChild(document.createTextNode(clientId));
-                		//pass timer to day and hour
-                		tr.insertCell().appendChild(document.createTextNode(timer));
-                		tr.insertCell().appendChild(document.createTextNode(mouseMax));
-                		tr.insertCell().appendChild(document.createTextNode(clickCount));
+                    tr.insertCell().appendChild(document.createTextNode(date));
+                    tr.insertCell().appendChild(document.createTextNode(userId));
+                    tr.insertCell().appendChild(document.createTextNode(clientId));
+                    //pass timer to day and hour
+                    tr.insertCell().appendChild(document.createTextNode(timer));
+                    tr.insertCell().appendChild(document.createTextNode(mouseMax));
+                    tr.insertCell().appendChild(document.createTextNode(clickCount));
+                    tr.insertCell().appendChild(document.createTextNode(objective));
                        }
                       }
                       
                       function errData(err){
                       console.log("Error error error");
                       console.log(err);
-                   				}
-		
-						}());
+                          }
+    
+            }());
 				</script>				
 							
 										<tbody  id="lista">
