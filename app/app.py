@@ -78,7 +78,7 @@ def product():
 	brand = "Messiac"
 	url = "http://messiac.com"
 	os.system("python ../session_recorder/real_time.py;")
-	return render_template("demo.html", brand = brand, url=url, customer=customer)
+	return render_template("real_time.html", brand = brand, url=url, customer=customer)
 
 #######################
 #  VIEW IN REAL TIME  #
