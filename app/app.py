@@ -75,23 +75,39 @@ def index():
 @app.route('/prediktor')
 def product():
 	#initModel()
-	#render out pre-built HTML file right on the index page
 	brand = "Messiac"
 	url = "http://messiac.com"
 	os.system("python ../session_recorder/real_time.py;")
 	return render_template("demo.html", brand = brand, url=url, customer=customer)
 
 #######################
-#                     #
+#  VIEW IN REAL TIME  #
 #######################
-@app.route('/real_time')
+@app.route('/prediktor/real_time')
 def real_time():
   return render_template("real_time.html", brand = brand)
-    
+
+
 #######################
-#                     #
+#    HISTORIC VIEW    #
 #######################
+@app.route('/prediktor/list')
+def list():
+  return render_template("list.html", brand = brand)
 	
+
+#######################
+#    TRAINING DATA    #
+#######################
+@app.route('/prediktor/training_data')
+def training_data():
+  return render_template("training_data.html", brand = brand)
+   
+
+#######################
+#    CROSS SELLING    #
+#######################
+
 #Store the CVS file with the data matrix
 def allowed_file(filename):
     return '.' in filename and \
