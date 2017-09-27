@@ -79,7 +79,7 @@ gapi.analytics.ready(function() {
 
 //configure analytics real time API access
   var profile_id = "159135697";
-  gapi.client.analytics.data.realtime.get({
+  response = gapi.client.analytics.data.realtime.get({
       'ids':'ga:' + profile_id,
       'metrics':'rt:totalEvents',
       'dimensions':'rt:eventAction,rt:eventLabel,rt:eventCategory', 
@@ -89,18 +89,21 @@ gapi.analytics.ready(function() {
     (function(){
   var ref = database.ref('selection');
   console.log(ref);
-// Bring snapshots of 30 seconds and persist to object object
+  console.log(response.result.rows[i][1].objective)
+// Bring snapshots of 30 seconds and persist to database
   for (var i = 0; i < response.result.rows.length; i++) {
     if (response.result.rows[i][0] == 30) { 
     var dbSelection = JSON.parse(response.result.rows[i][1]);
     console.log(dbSelection);
-    ref.push(dbSelection);}}
+    ref.push(dbSelection)
+    ;}}
 // Bring all information and persist to database all object
   for (var i = 0; i < response.result.rows.length; i++) {
     var ref = database.ref('all'); 
     var dbAll = JSON.parse(response.result.rows[i][1]);
     console.log(dbAll);
-    ref.push(dbAll);}  
+    ref.push(dbAll)
+    ;}  
 }())
   }).then(null, function(err) {
       console.log(err);
