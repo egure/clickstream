@@ -66,20 +66,19 @@
 var seconds = 3000;
 var iterations = 0;
 //var interval = setInterval(queryCoreReportingApi, seconds);
-
 gapi.analytics.ready(function() {
   /**
    * Authorize the user with an access token obtained server side.
    */
   gapi.analytics.auth.authorize({
     'serverAuth': {
-      'access_token': '{{tojen}}'
+      'access_token': 'ya29.ElnTBBySA9zHKkKIC104YvCeC64v64E1F-OwTEr89H7r8sedGt9DOp14pYHbwuj1elgh7gDAqVQYm6ogk5GIZXwysGKrjcjigAL1DvBbx7oEywjdaNi1zZ8NpA'
     }
       });
 
 //configure analytics real time API access
   var profile_id = "159135697";
-  response = gapi.client.analytics.data.realtime.get({
+  gapi.client.analytics.data.realtime.get({
       'ids':'ga:' + profile_id,
       'metrics':'rt:totalEvents',
       'dimensions':'rt:eventAction,rt:eventLabel,rt:eventCategory', 
@@ -89,27 +88,23 @@ gapi.analytics.ready(function() {
     (function(){
   var ref = database.ref('selection');
   console.log(ref);
-  console.log(response.result.rows[i][1].objective)
-// Bring snapshots of 30 seconds and persist to database
+// Bring snapshots of 30 seconds and persist to object object
   for (var i = 0; i < response.result.rows.length; i++) {
     if (response.result.rows[i][0] == 30) { 
     var dbSelection = JSON.parse(response.result.rows[i][1]);
     console.log(dbSelection);
-    ref.push(dbSelection)
-    ;}}
+    ref.push(dbSelection);}}
 // Bring all information and persist to database all object
   for (var i = 0; i < response.result.rows.length; i++) {
     var ref = database.ref('all'); 
     var dbAll = JSON.parse(response.result.rows[i][1]);
     console.log(dbAll);
-    ref.push(dbAll)
-    ;}  
+    ref.push(dbAll);}  
 }())
   }).then(null, function(err) {
       console.log(err);
   });
 });
-
 
 (function(){
                       var ref = database.ref('all');
@@ -117,7 +112,8 @@ gapi.analytics.ready(function() {
                       function gotData(data){
                       var registers = data.val();
                       var keys = Object.keys(registers);
-                      for (var i = 0; i < keys.length; i++){
+                      var number = keys.length - 1;
+                      for (var i = number; i >= 0; i--){
                         var k = keys[i];
                         var date = registers[k].date;
                         var clientId = registers[k].clientId;
@@ -141,13 +137,11 @@ gapi.analytics.ready(function() {
                     tr.insertCell().appendChild(document.createTextNode(clickCount));
                     tr.insertCell().appendChild(document.createTextNode(objective));
                        }
-                      }
-                      
+                      }   
                       function errData(err){
                       console.log("Error error error");
                       console.log(err);
                           }
-    
             }());
 
 
