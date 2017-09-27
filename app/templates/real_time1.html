@@ -3,15 +3,6 @@
 
 <script src="https://www.gstatic.com/firebasejs/3.5.2/firebase.js"></script>
 
-<script>
-(function(w,d,s,g,js,fs){
-  g=w.gapi||(w.gapi={});g.analytics={q:[],ready:function(f){this.q.push(f);}};
-  js=d.createElement(s);fs=d.getElementsByTagName(s)[0];
-  js.src='https://apis.google.com/js/platform.js';
-  fs.parentNode.insertBefore(js,fs);js.onload=function(){g.load('analytics');};
-}(window,document,'script'));
-</script>
-
 <button id="auth-button" hidden>Authorize</button>
 
           <div class="content">
@@ -61,22 +52,130 @@
   var database = firebase.database();
   console.log(database);
 
-  
- //set parameters for process
+  // Replace with your client ID from the developer console.
+  //var CLIENT_ID = "455316581334-l0sm1ehg8ebmfk35jvi7psi0v69t7ujd.apps.googleusercontent.com	";
+  var CLIENT_ID = "455316581334-l0sm1ehg8ebmfk35jvi7psi0v69t7ujd.apps.googleusercontent.com";	
+
+  // Set authorized scope.
+  var SCOPES = ['https://www.googleapis.com/auth/analytics.readonly'];
+
+  var data;
+
+  function authorize(event) {
+    // Handles the authorization flow.
+    // `immediate` should be false when invoked from the button click.
+    var useImmdiate = event ? false : true;
+    var authData = {
+      client_id: CLIENT_ID,
+      scope: SCOPES,
+      immediate: useImmdiate
+    };
+
+    gapi.auth.authorize(authData, function(response) {
+      var authButton = document.getElementById('auth-button');
+      if (response.error) {
+        authButton.hidden = false;
+      }
+      else {
+        authButton.hidden = true;
+        queryAccounts();
+      }
+    });
+  }
+
+
+function queryAccounts() {
+  // Load the Google Analytics client library.
+  gapi.client.load('analytics', 'v3').then(function() {
+
+    // Get a list of all Google Analytics accounts for this user
+    gapi.client.analytics.management.accounts.list().then(handleAccounts);
+  });
+}
+
+
+function handleAccounts(response, hello) {
+  // Handles the response from the accounts list method.
+  if (response.result.items && response.result.items.length) {
+    // Get the first Google Analytics account.
+    var firstAccountId = response.result.items[0].id;
+
+    // Query for properties.
+    queryProperties(firstAccountId);
+  } else {
+    console.log('No accounts found for this user.');
+  }
+}
+
+
+function queryProperties(accountId) {
+  // Get a list of all the properties for the account.
+  gapi.client.analytics.management.webproperties.list(
+      {'accountId': accountId})
+    .then(handleProperties)
+    .then(null, function(err) {
+      // Log any errors.
+      console.log(err);
+  });
+}
+
+
+function handleProperties(response, hello) {
+  // Handles the response from the webproperties list method.
+  if (response.result.items && response.result.items.length) {
+
+    // Get the first Google Analytics account
+    var firstAccountId = response.result.items[0].accountId;
+
+    // Get the first property ID
+    var firstPropertyId = response.result.items[0].id;
+
+    // Query for Views (Profiles).
+    queryProfiles(firstAccountId, firstPropertyId);
+  } else {
+    console.log('No properties found for this user.');
+  }
+}
+
+
+function queryProfiles(accountId, propertyId) {
+  // Get a list of all Views (Profiles) for the first property
+  // of the first Account.
+  gapi.client.analytics.management.profiles.list({
+      'accountId': accountId,
+      'webPropertyId': propertyId
+  })
+  .then(handleProfiles)
+  .then(null, function(err) {
+      // Log any errors.
+      console.log(err);
+  });
+}
+
+
+function handleProfiles(response) {
+  // Handles the response from the profiles list method.
+  if (response.result.items && response.result.items.length) {
+    // Get the first View (Profile) ID.
+    var firstProfileId = response.result.items[0].id;
+
+    // Query the Core Reporting API.
+    queryCoreReportingApi(firstProfileId);
+  } else {
+    console.log('No views (profiles) found for this user.');
+  }
+}
+
+//set parameters for process
 var seconds = 3000;
 var iterations = 0;
-//var interval = setInterval(queryCoreReportingApi, seconds);
+var interval = setInterval(queryCoreReportingApi, seconds);
 
-gapi.analytics.ready(function() {
-  /**
-   * Authorize the user with an access token obtained server side.
-   */
-  gapi.analytics.auth.authorize({
-    'serverAuth': {
-      'access_token': '{{tojen}}'
-    }
-      });
-
+function queryCoreReportingApi(profileId, hello) {
+//stop process after 10 interations
+  iterations++;
+    if (iterations >= 10)
+        clearInterval(interval);
 //configure analytics real time API access
   var profile_id = "159135697";
   gapi.client.analytics.data.realtime.get({
@@ -105,8 +204,15 @@ gapi.analytics.ready(function() {
   }).then(null, function(err) {
       console.log(err);
   });
-});
+}
 
+  // Add an event listener to the 'auth-button'.
+  document.getElementById('auth-button').addEventListener('click', authorize);
+</script>
+
+<script src="https://apis.google.com/js/client.js?onload=authorize"></script>
+
+<script>
 
 (function(){
                       var ref = database.ref('all');
@@ -146,7 +252,6 @@ gapi.analytics.ready(function() {
                           }
     
             }());
-
 
 </script>
 
