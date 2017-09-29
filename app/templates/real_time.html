@@ -23,7 +23,7 @@
                          Latest user session's data and convertion probability calculation.
                          </p>
 
-            <br>
+                    <br>
                           <div class="card">
                               <div class="content">
                                   <div class="toolbar">
@@ -72,7 +72,7 @@ gapi.analytics.ready(function() {
    */
   gapi.analytics.auth.authorize({
     'serverAuth': {
-      'access_token': 'ya29.ElnTBBySA9zHKkKIC104YvCeC64v64E1F-OwTEr89H7r8sedGt9DOp14pYHbwuj1elgh7gDAqVQYm6ogk5GIZXwysGKrjcjigAL1DvBbx7oEywjdaNi1zZ8NpA'
+      'access_token': '{{tojen}}'
     }
       });
 
@@ -86,8 +86,7 @@ gapi.analytics.ready(function() {
   .then(function(response) {
 //firebaselogin    
     (function(){
-  var ref = database.ref('selection');
-  console.log(ref);
+   var ref = database.ref('selection');  
 // Bring snapshots of 30 seconds and persist to object object
   for (var i = 0; i < response.result.rows.length; i++) {
     if (response.result.rows[i][0] == 30) { 
@@ -95,57 +94,43 @@ gapi.analytics.ready(function() {
     console.log(dbSelection);
     ref.push(dbSelection);}}
 // Bring all information and persist to database all object
+  
+  var ref = database.ref('all');  
+  ref.on('value', capBeto);
+  var arr;
+  console.log(response);
+
+  function capBeto(data1){
+    console.log("go");
+    arr = data1.val();
+    console.log(arr);
+    console.log(response.result.rows);
+//iterate all elements from google analytics real time
   for (var i = 0; i < response.result.rows.length; i++) {
-    var ref = database.ref('all'); 
-    var dbAll = JSON.parse(response.result.rows[i][1]);
-    console.log(dbAll);
-    ref.push(dbAll);}  
+    //for each element compare with the database
+    console.log(response.result.rows[i][1].date);
+    for (var k = 0; k < arr.length ; k++) {
+        //if the item does not exist on the database persist to database
+        console.log(arr[k].date);
+        if(response.result.rows[i][1].date !== arr[k].date){  
+            if(i == response.result.rows.length) {
+                var dbAll = JSON.parse(response.result.rows[i][1]);
+                ref.push(dbAll);
+        }
+          }
+            }
+              }
+                }
+    
 }())
   }).then(null, function(err) {
+      console.log("probably no data");
       console.log(err);
   });
 });
 
-(function(){
-                      var ref = database.ref('all');
-                      ref.on('value', gotData, errData);
-                      function gotData(data){
-                      var registers = data.val();
-                      var keys = Object.keys(registers);
-                      var number = keys.length - 1;
-                      for (var i = number; i >= 0; i--){
-                        var k = keys[i];
-                        var date = registers[k].date;
-                        var clientId = registers[k].clientId;
-                        var userId = registers[k].userId;
-                        var timer = registers[k].timer;
-                        if (timer == "") {timer = 1};
-                        var mouseMax = registers[k].mouseMax;
-                        if (mouseMax == "") {mouseMax = 0};                       
-                        var clickCount = registers[k].clickCount;
-                        if (clickCount == "") {clickCount = 1};
-                        var objective = registers[k].objective;
-                        if (objective == "") {objective = 0};
-                        var tbl = document.getElementById("lista");
-                        var tr = tbl.insertRow();
-                    tr.insertCell().appendChild(document.createTextNode(date));
-                    tr.insertCell().appendChild(document.createTextNode(userId));
-                    tr.insertCell().appendChild(document.createTextNode(clientId));
-                    //pass timer to day and hour
-                    tr.insertCell().appendChild(document.createTextNode(timer));
-                    tr.insertCell().appendChild(document.createTextNode(mouseMax));
-                    tr.insertCell().appendChild(document.createTextNode(clickCount));
-                    tr.insertCell().appendChild(document.createTextNode(objective));
-                       }
-                      }   
-                      function errData(err){
-                      console.log("Error error error");
-                      console.log(err);
-                          }
-            }());
 
-
-</script>
+            </script>
 
                   <tbody  id="lista">
                       
