@@ -132,6 +132,60 @@ gapi.analytics.ready(function() {
 
             </script>
 
+<script>
+            (function(){
+                      //if database is empty this function will return error
+                      var config = {
+                        apiKey: "AIzaSyDUkZoY9nE97BRl1eGDWGuTdfnJX9X960c",
+                        authDomain: "neem-fs.firebaseapp.com",
+                        databaseURL: "https://neem-fs.firebaseio.com",
+                        projectId: "neem-fs",
+                        storageBucket: "neem-fs.appspot.com",
+                        messagingSenderId: "455316581334"
+                      };
+                      //firebase.initializeApp(config);
+                      firebase.initializeApp(config);
+                      var database = firebase.database();
+                      var ref = database.ref('all');
+                      ref.on('value', gotData, errData);
+                      function gotData(data){
+                      var registers = data.val();
+                      var number = keys.length - 1;
+                      for (var i = number; i >= 0; i--){
+                        var k = keys[i];
+                        var date = registers[k].date;
+                        var clientId = registers[k].clientId;
+                        var userId = registers[k].userId;
+                        var timer = registers[k].timer;
+                        if (timer == "") {timer = 1};
+                        var mouseMax = registers[k].mouseMax;
+                        if (mouseMax == "") {mouseMax = 0};                       
+                        var clickCount = registers[k].clickCount;
+                        if (clickCount == "") {clickCount = 1};
+                        var objective = registers[k].objective;
+                        if (objective == "") {objective = 0};
+                        var tbl = document.getElementById("lista");
+                        var tr = tbl.insertRow();
+                    tr.insertCell().appendChild(document.createTextNode(date));
+                    tr.insertCell().appendChild(document.createTextNode(userId));
+                    tr.insertCell().appendChild(document.createTextNode(clientId));
+                    //pass timer to day and hour
+                    tr.insertCell().appendChild(document.createTextNode(timer));
+                    tr.insertCell().appendChild(document.createTextNode(mouseMax));
+                    tr.insertCell().appendChild(document.createTextNode(clickCount));
+                    tr.insertCell().appendChild(document.createTextNode(objective));
+                       }
+                      }
+                      
+                      function errData(err){
+                      console.log("Error error error");
+                      console.log(err);
+                          }
+    
+            }());
+        </script>   
+
+
                   <tbody  id="lista">
                       
                     </tfoot>
