@@ -107,10 +107,10 @@ gapi.analytics.ready(function() {
     console.log(response.result.rows);
 //iterate all elements from google analytics real time
   for (var i = 0; i < response.result.rows.length; i++) {
-    //for each element compare with the database
+    for each element compare with the database
     console.log(response.result.rows[i][1].date);
     for (var k = 0; k < arr.length ; k++) {
-        //if the item does not exist on the database persist to database
+        if the item does not exist on the database persist to database
         console.log(arr[k].date);
         if(response.result.rows[i][1].date !== arr[k].date){  
             if(i == response.result.rows.length) {
@@ -122,7 +122,9 @@ gapi.analytics.ready(function() {
               }
                 }
     
-}())
+}());
+
+
   }).then(null, function(err) {
       console.log("probably no data");
       console.log(err);
@@ -130,26 +132,12 @@ gapi.analytics.ready(function() {
 });
 
 
-            </script>
-
-<script>
-            (function(){
-                      //if database is empty this function will return error
-                      var config = {
-                        apiKey: "AIzaSyDUkZoY9nE97BRl1eGDWGuTdfnJX9X960c",
-                        authDomain: "neem-fs.firebaseapp.com",
-                        databaseURL: "https://neem-fs.firebaseio.com",
-                        projectId: "neem-fs",
-                        storageBucket: "neem-fs.appspot.com",
-                        messagingSenderId: "455316581334"
-                      };
-                      //firebase.initializeApp(config);
-                      firebase.initializeApp(config);
-                      var database = firebase.database();
+(function(){
                       var ref = database.ref('all');
                       ref.on('value', gotData, errData);
                       function gotData(data){
                       var registers = data.val();
+                      var keys = Object.keys(registers);
                       var number = keys.length - 1;
                       for (var i = number; i >= 0; i--){
                         var k = keys[i];
@@ -175,15 +163,16 @@ gapi.analytics.ready(function() {
                     tr.insertCell().appendChild(document.createTextNode(clickCount));
                     tr.insertCell().appendChild(document.createTextNode(objective));
                        }
-                      }
-                      
+                      }   
                       function errData(err){
                       console.log("Error error error");
                       console.log(err);
                           }
-    
             }());
-        </script>   
+    
+
+
+            </script>
 
 
                   <tbody  id="lista">
