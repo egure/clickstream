@@ -55,7 +55,7 @@
 	    	<div class="sidebar-wrapper">
 				<div class="user">
 	                <div class="photo">
-	                    <img src={{ url_for('static', filename='img/pho.png') }} />
+	                    <img src={{ url_for('static', filename='img/'+path+'.png') }} />
 
 	                </div>
 	                <div class="info">
@@ -265,6 +265,5 @@
     	$(document).ready(function(){
 			demo.initOverviewDashboard();
 			demo.initCirclePercentage();
-
     	});
 	</script>

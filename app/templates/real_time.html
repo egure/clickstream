@@ -96,6 +96,7 @@ gapi.analytics.ready(function() {
 // Bring all information and persist to database all object
   
   var ref = database.ref('all');  
+  ref.child('date').equalTo(111).on("value", function(snapshot) {console.log("Está 111? " + snapshot.val())});
   ref.on('value', capBeto);
   var arr;
   console.log(response);
@@ -105,27 +106,29 @@ gapi.analytics.ready(function() {
     arr = data1.val();
     console.log(arr);
     console.log(response.result.rows);
+
 //iterate all elements from google analytics real time
   for (var i = 0; i < response.result.rows.length; i++) {
-    for each element compare with the database
+    //for each element compare with the database
     console.log(response.result.rows[i][1].date);
     for (var k = 0; k < arr.length ; k++) {
-        if the item does not exist on the database persist to database
+        //shall the item not exist on the database persist to database
         console.log(arr[k].date);
         if(response.result.rows[i][1].date !== arr[k].date){  
             if(i == response.result.rows.length) {
                 var dbAll = JSON.parse(response.result.rows[i][1]);
                 ref.push(dbAll);
-        }
-          }
-            }
-              }
-                }
-    
+                                                  }
+                                                           }
+                                          }
+                                                        }
+                            }    
 }());
 
 
   }).then(null, function(err) {
+      var div = document.getElementById('divDiv');
+      div.innerHTML += 'No recent activity has been recorded in the past 25 minutes. Enter Boomfix.es to see results in real time.';
       console.log("probably no data");
       console.log(err);
   });
@@ -174,7 +177,7 @@ gapi.analytics.ready(function() {
 
             </script>
 
-
+                  <div id="divDiv" class="text-center"></div>
                   <tbody  id="lista">
                       
                     </tfoot>

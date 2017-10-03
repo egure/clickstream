@@ -7,6 +7,7 @@
 #Generating HTML from within Python is not fun, and actually pretty cumbersome because you have to do the
 #HTML escaping on your own to keep the application secure. Because of that Flask configures the Jinja2 template engine 
 #for you automatically.
+
 #future for python 2 and 3
 from __future__ import print_function
 #requests are objects that flask handles (get set post, etc)
@@ -53,14 +54,9 @@ GOOGLE_STORAGE = 'gs'
 LOCAL_FILE = 'file'
 brand = "Messiac"
 url = "http://messiac.com"
-customer = "Boomfix.es"
+company = ""
+customer = company
 	
-#decoding an image from base64 into raw representation
-def convertImage(imgData1):
-	imgstr = re.search(r'base64,(.*)',imgData1).group(1)
-	#print(imgstr)
-	with open('output.png','wb') as output:
-		output.write(imgstr.decode('base64'))
 
 #######################
 #        VIEWS        #
@@ -70,23 +66,23 @@ def convertImage(imgData1):
 def index():
 	#initModel()
 	#render out pre-built HTML file right on the index page
-	return render_template("home.html", brand = brand)
-	
-@app.route('/1112/prediktor')
-def product():
-	#initModel()
-	brand = "Messiac"
-	url = "http://messiac.com"
-	os.system("python ../session_recorder/real_time.py;")
-	return render_template("real_time.html", brand = brand, url=url, customer=customer)
+	return render_template("index.html", brand = brand)
+
+@app.route('/<company>/1112/prediktor')
+def dashboard(company):
+    brand = "Messiac"
+    path = company
+    url = "http://messiac.com"
+    #os.system("python ../session_recorder/real_time.py;")
+    return render_template("dashboard.html", brand = brand, url=url, customer=customer, path = path)
 
 #######################
 #  VIEW IN REAL TIME  #
 #######################
-
-@app.route('/1112/prediktor/real_time')
-def real_time():
-    # Google Analytics API autentification
+@app.route('/<company>/1112/prediktor/real_time')
+def real_time(company):
+    path = company
+        # Google Analytics API autentification
     from oauth2client.service_account import ServiceAccountCredentials
     # The scope for the OAuth2 request.
     SCOPE = 'https://www.googleapis.com/auth/analytics.readonly'
@@ -96,29 +92,29 @@ def real_time():
     def get_access_token():
         ServiceAccountCredentials.from_json_keyfile_name(KEY_FILEPATH, SCOPE).get_access_token().access_token
     tojen = ServiceAccountCredentials.from_json_keyfile_name(KEY_FILEPATH, SCOPE).get_access_token().access_token
-    return render_template("real_time.html", brand = brand, tojen = tojen)
+    return render_template("real_time.html", brand = brand, tojen = tojen, path = path)
 
 #######################
 #    HISTORIC VIEW    #
 #######################
-
-@app.route('/1112/prediktor/list')
-def list():
-  return render_template("list.html", brand = brand)
+@app.route('/<company>/1112/prediktor/list')
+def list(company):
+    path = company
+    return render_template("list.html", brand = brand, path = path)
 	
 #######################
 #    TRAINING DATA    #
 #######################
-
-@app.route('/1112/prediktor/training_data')
-def training_data():
-  return render_template("training_data.html", brand = brand)
+@app.route('/1112/prediktor/training_data', strict_slashes=False) 
+@app.route('/<company>/1112/prediktor/training_data')
+def training_data(company):
+    path = company
+    return render_template("training_data.html", brand = brand, path = path)
    
 
 #######################
 #    CROSS SELLING    #
 #######################
-
 #Store the CVS file with the data matrix
 def allowed_file(filename):
     return '.' in filename and \
