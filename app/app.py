@@ -105,7 +105,6 @@ def list(company):
 #######################
 #    TRAINING DATA    #
 #######################
-@app.route('/1112/prediktor/training_data', strict_slashes=False) 
 @app.route('/<company>/1112/prediktor/training_data')
 def training_data(company):
     path = company
