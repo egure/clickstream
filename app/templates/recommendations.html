@@ -7,12 +7,12 @@
 	            <div class="container-fluid">
 	                <div class="row">
 	                    <div class="col-md-12">
-							<h4 class="title">Historical recolection of data</h4>
+							<h4 class="title">Improve your recommendations</h4>
 		                    <p class="category">
-		                     Data used for calculating probabilities.
+                         Maximize the duration of user's session by generating recommendations based on the Engagement Co-efficient.
 		                     </p>
 
-						<br>
+						            <br>
 	                        <div class="card">
 	                            <div class="content">
 	                                <div class="toolbar">
@@ -23,12 +23,8 @@
 										<thead>
 											<tr>
 												<th>Date</th>
-                        <th>User Id</th>
-                        <th>Browser Id </th>
-                        <th>Duration</th>
-                        <th>Scroll depth</th>
-                        <th>Click count</th>
-                        <th class="disabled-sorting">Probability</th>
+                        <th>URL</th>
+                        <th>Engagement Coefficient </th>
 											</tr>
 										</thead>
 										<tfoot>
@@ -46,36 +42,23 @@
                       //firebase.initializeApp(config);
                       firebase.initializeApp(config);
                       var database = firebase.database();
-                      var ref = database.ref('selection');
-                      ref.on('value', gotData, errData);
-                      function gotData(data){
+                      var ref = database.ref('recommendations');
+                      ref.on('value', gotRecommendations, errData);
+                      function gotRecommendations(data){
                       var registers = data.val();
                       var keys = Object.keys(registers);
                       var number = keys.length - 1;
                       for (var i = number; i >= 0; i--){
                         var k = keys[i];
                         var date = registers[k].date;
-                        var clientId = registers[k].clientId;
-                        var userId = registers[k].userId;
-                        var timer = registers[k].timer;
-                        if (timer == "") {timer = 1};
-                        var mouseMax = registers[k].mouseMax;
-                        if (mouseMax == "") {mouseMax = 0};                       
-                        var clickCount = registers[k].clickCount;
-                        if (clickCount == "") {clickCount = 1};
-                        var objective = registers[k].objective;
-                        if (objective == "") {objective = 0};
-                        var tbl = document.getElementById("lista");
+                        var url = registers[k].url;
+                        var coefficient = registers[k].coefficient;
+                        var tbl = document.getElementById("recommendations");
                         var tr = tbl.insertRow();
                     tr.insertCell().appendChild(document.createTextNode(date));
-                    tr.insertCell().appendChild(document.createTextNode(userId));
-                    tr.insertCell().appendChild(document.createTextNode(clientId));
+                    tr.insertCell().appendChild(document.createTextNode(url));
+                    tr.insertCell().appendChild(document.createTextNode(coefficient));
                     //pass timer to day and hour
-                    //pass timer to day and hour
-                    tr.insertCell().appendChild(document.createTextNode(timer));
-                    tr.insertCell().appendChild(document.createTextNode(mouseMax));
-                    tr.insertCell().appendChild(document.createTextNode(clickCount));
-                    tr.insertCell().appendChild(document.createTextNode(objective));
                        }
                       }
                       
@@ -87,12 +70,10 @@
             }());
 				</script>				
 							
-										<tbody  id="lista">
-											
+										<tbody  id="recommendations">		
 										</tfoot>
 										</tbody>
-
-									    </table>
+									 </table>
 									</div>
 
 	                            </div>

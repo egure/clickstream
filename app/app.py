@@ -61,7 +61,6 @@ customer = company
 #######################
 #        VIEWS        #
 #######################
-
 @app.route('/')
 def index():
 	#initModel()
@@ -75,6 +74,14 @@ def dashboard(company):
     url = "http://messiac.com"
     #os.system("python ../session_recorder/real_time.py;")
     return render_template("dashboard.html", brand = brand, url=url, customer=customer, path = path)
+
+#######################
+#    POST ANALYSIS    #
+#######################
+@app.route('/<company>/1112/prediktor/recommendations')
+def recommendations(company):
+    path = company
+    return render_template("recommendations.html", brand = brand, path = path)
 
 #######################
 #  VIEW IN REAL TIME  #
