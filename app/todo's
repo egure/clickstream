@@ -1,0 +1,9 @@
+0 - hacer video
+
+1 - arreglar consulta si vamos a tomar el mayor valor del usuario / sesion, hacer un update al registro y no crear uno nuevo.
+
+2 - definir probabilidad de click en otra nota
+
+3 - que la consulta de analytics corra sin tener que abrir el cliente
+
+4 - sacar permisos abiertos de firebase

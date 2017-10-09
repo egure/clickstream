@@ -21,8 +21,6 @@ import keras.models
 #for regular expressions, saves time dealing with string data
 import re
 #mongo
-from flask_pymongo import PyMongo
-#system level operations (like loading files)
 import sys 
 #for reading operating system data
 import os
@@ -44,10 +42,6 @@ import json
         
 #The DB connection will assume that the database has the same name as the Flask Appliction which is "app"
 app = Flask(__name__)
-mongo = PyMongo(app)
-UPLOAD_FOLDER = os.getcwd()+'/uploads' #'gs://neemfs/'
-ALLOWED_EXTENSIONS = set(['raw','flac','mp3','wav'])
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 # URI scheme for Cloud Storage.
 GOOGLE_STORAGE = 'gs'
 # URI scheme for accessing local files.
@@ -63,17 +57,17 @@ customer = company
 #######################
 @app.route('/')
 def index():
-	#initModel()
 	#render out pre-built HTML file right on the index page
 	return render_template("index.html", brand = brand)
 
-@app.route('/<company>/1112/prediktor')
-def dashboard(company):
+@app.route('/<company>/1112/prediktor/summary')
+def summary(company):
     brand = "Messiac"
     path = company
+    company = "CNN"
     url = "http://messiac.com"
     #os.system("python ../session_recorder/real_time.py;")
-    return render_template("dashboard.html", brand = brand, url=url, customer=customer, path = path)
+    return render_template("summary.html", brand = brand, company = company, url=url, customer=customer, path = path)
 
 #######################
 #    POST ANALYSIS    #
@@ -116,7 +110,25 @@ def list(company):
 def training_data(company):
     path = company
     return render_template("training_data.html", brand = brand, path = path)
-   
+
+#######################
+#      PARAMETERS     #
+#######################
+@app.route('/<company>/1112/prediktor/parameters')
+def parameters(company):
+    path = company
+    company = "CNN"
+    return render_template("parameters.html", company = company, brand = brand, path = path)
+
+#######################
+#      EDIT USER      #
+#######################
+@app.route('/<company>/1112/prediktor/user')
+def user(company):
+    path = company
+    company = "CNN"
+    user_name = "Eduardo Castillo"
+    return render_template("user.html", user_name = user_name, company = company, brand = brand, path = path)
 
 #######################
 #    CROSS SELLING    #
@@ -129,7 +141,6 @@ def allowed_file(filename):
 #######################
 #    AJAX EXAMPLE     #
 #######################
-
 @app.route('/test', methods=['GET','POST'])
 def test():
     return render_template("test.html", brand = brand)
@@ -145,7 +156,6 @@ def test1():
 #######################
 #DEEP LEARNING PREDIC.#
 #######################
-
 @app.route('/predict/',methods=['GET','POST'])
 def predict():
     from keras.models import Sequential #this is the NN model type 

@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block body %}
+
+                            
+ <div class="card card-user">
+                              <div class="image">
+                                  <!-- <img src="assets/img/background.jpg" alt="..."/> -->
+                              </div>
+                              <div class="content">
+                                  <div class="author"> 
+                                 <img class="avatar border-white" src={{ url_for('static', filename='img/'+path+'.png') }} />
+                                    <!--<h4 class="title">{{company}}<br />
+                                       <a href="#"><small>{{company_description}}</small></a>
+                                    </h4>-->
+                                  <p class="description text-center">{{company}} uses deep learning to maximize conversion and session duration, in real time.</p>                                  
+                               </div>
+                              <hr>
+                              <div class ="text-center">
+                              <br>
+                        We measure session engagement as the user navegates <br>
+                        Recommend content with the highest convertion probability while the user is navegating<br>
+                        Increase conversion and session duration automatically
+                              </div>
+
+                              </div>
+                          </div>
+	   
+	
+{% endblock %}

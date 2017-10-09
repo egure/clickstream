@@ -1,0 +1,18 @@
+
+1 - agregar corres de neem a usuarios autorizados de google analytics
+
+https://ga-dev-tools.appspot.com/embed-api/server-side-authorization/
+
+los emails que deben autorizar en google analytics se encuentran acá:
+
+https://console.cloud.google.com/iam-admin/serviceaccounts/
+
+2 - instalar google tag manager o autorizar a mi cuenta para poder acceder
+
+https://support.google.com/tagmanager/answer/6107011?hl=en
+
+3 - configurar google tag manager
+
+instalar los siguientes TAGS
+
+crear variables en GTM
