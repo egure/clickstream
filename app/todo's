@@ -7,3 +7,17 @@
 3 - que la consulta de analytics corra sin tener que abrir el cliente
 
 4 - sacar permisos abiertos de firebase
+
+for (var i = 0; i < response.result.rows.length; i++) {
+      //for each element compare with the database
+      var google_date = response.result.rows[i][1].date;
+      var fb_date = "";
+      var ref1 = database.ref('all');  
+      ref1.orderByChild('date').equalTo(google_date).on("child_added", function(snapshot) {var fb_date = snapshot.val().date;
+      console.log(fb_date);
+     });
+      var qury  = 1;
+      if (!query){
+        var dbAll = JSON.parse(response.result.rows[i][1]);
+        ref.push(dbAll);}
+      }

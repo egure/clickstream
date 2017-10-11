@@ -90,10 +90,14 @@ def real_time(company):
     # The location of the key file with the key data.
     KEY_FILEPATH = 'templates/neem.json'
     # Defines a method to get an access token from the ServiceAccount object.
+    if company == "cnn":
+        url = "http://cnn.cl/categoria/internacional"
+    else:
+        url = "https://www.avenida.com.ar/tienda-tecnologia"
     def get_access_token():
         ServiceAccountCredentials.from_json_keyfile_name(KEY_FILEPATH, SCOPE).get_access_token().access_token
     tojen = ServiceAccountCredentials.from_json_keyfile_name(KEY_FILEPATH, SCOPE).get_access_token().access_token
-    return render_template("real_time.html", brand = brand, tojen = tojen, path = path)
+    return render_template("real_time.html", brand = brand, tojen = tojen, path = path, url = url)
 
 #######################
 #    HISTORIC VIEW    #
@@ -110,6 +114,28 @@ def list(company):
 def training_data(company):
     path = company
     return render_template("training_data.html", brand = brand, path = path)
+
+#######################
+# ENGAGEMENT-ANALYTICS#
+#######################
+@app.route('/<company>/1112/prediktor/analytics')
+def analytics(company):
+    path = company
+        # Google Analytics API autentification
+    from oauth2client.service_account import ServiceAccountCredentials
+    # The scope for the OAuth2 request.
+    SCOPE = 'https://www.googleapis.com/auth/analytics.readonly'
+    # The location of the key file with the key data.
+    KEY_FILEPATH = 'templates/neem.json'
+    # Defines a method to get an access token from the ServiceAccount object.
+    if company == "cnn":
+        url = "http://cnn.cl/categoria/internacional"
+    else:
+        url = "https://www.avenida.com.ar/tienda-tecnologia"
+    def get_access_token():
+        ServiceAccountCredentials.from_json_keyfile_name(KEY_FILEPATH, SCOPE).get_access_token().access_token
+    tojen = ServiceAccountCredentials.from_json_keyfile_name(KEY_FILEPATH, SCOPE).get_access_token().access_token
+    return render_template("analytics.html", brand = brand, tojen = tojen, path = path, url = url)
 
 #######################
 #      PARAMETERS     #

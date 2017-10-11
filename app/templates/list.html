@@ -28,7 +28,7 @@
                         <th>Duration</th>
                         <th>Scroll depth</th>
                         <th>Click count</th>
-                        <th class="disabled-sorting">Probability</th>
+                        <th class="disabled-sorting">Output</th>
 											</tr>
 										</thead>
 										<tfoot>
@@ -46,37 +46,27 @@
                       //firebase.initializeApp(config);
                       firebase.initializeApp(config);
                       var database = firebase.database();
-                      var ref = database.ref('selection');
+                      var ref = database.ref('selection').orderByChild("time").limitToLast(100);
                       ref.on('value', gotData, errData);
                       function gotData(data){
-                      var registers = data.val();
-                      var keys = Object.keys(registers);
-                      var number = keys.length - 1;
-                      for (var i = number; i >= 0; i--){
-                        var k = keys[i];
-                        var date = registers[k].date;
-                        var clientId = registers[k].clientId;
-                        var userId = registers[k].userId;
-                        var timer = registers[k].timer;
-                        if (timer == "") {timer = 1};
-                        var mouseMax = registers[k].mouseMax;
-                        if (mouseMax == "") {mouseMax = 0};                       
-                        var clickCount = registers[k].clickCount;
-                        if (clickCount == "") {clickCount = 1};
-                        var objective = registers[k].objective;
-                        if (objective == "") {objective = 0};
-                        var tbl = document.getElementById("lista");
-                        var tr = tbl.insertRow();
-                    tr.insertCell().appendChild(document.createTextNode(date));
-                    tr.insertCell().appendChild(document.createTextNode(userId));
-                    tr.insertCell().appendChild(document.createTextNode(clientId));
-                    //pass timer to day and hour
-                    //pass timer to day and hour
-                    tr.insertCell().appendChild(document.createTextNode(timer));
-                    tr.insertCell().appendChild(document.createTextNode(mouseMax));
-                    tr.insertCell().appendChild(document.createTextNode(clickCount));
-                    tr.insertCell().appendChild(document.createTextNode(objective));
-                       }
+                        data.forEach(function(child){
+                          var key = child.key;
+                          var value = child.val();
+                          if (value.timer == "") {value.timer = 1};
+                          if (value.mouseMax == "") {value.mouseMax = 0};                       
+                          if (value.clickCount == "") {value.clickCount = 1};
+                          if (value.objective == "") {value.objective = 0};
+                          var tbl = document.getElementById("lista");
+                          var tr = tbl.insertRow();
+                          tr.insertCell().appendChild(document.createTextNode(value.date));
+                          tr.insertCell().appendChild(document.createTextNode(value.userId));
+                          tr.insertCell().appendChild(document.createTextNode(value.clientId));
+                          //pass timer to day and hour
+                          tr.insertCell().appendChild(document.createTextNode(value.timer));
+                          tr.insertCell().appendChild(document.createTextNode(value.mouseMax));
+                          tr.insertCell().appendChild(document.createTextNode(value.clickCount));
+                          tr.insertCell().appendChild(document.createTextNode(value.objective));
+                        })
                       }
                       
                       function errData(err){

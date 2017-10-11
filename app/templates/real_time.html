@@ -1,7 +1,18 @@
 {% extends "layout.html" %}
 {% block body %}
 
+<!-- Firebase -->
+
 <script src="https://www.gstatic.com/firebasejs/3.5.2/firebase.js"></script>
+
+<!-- Other Firebase libraries 
+
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.1.1/firebase-messaging.js"></script>
+
+-->
 
 <script>
 (function(w,d,s,g,js,fs){
@@ -39,7 +50,7 @@
                         <th>Duration</th>
                         <th>Scroll depth</th>
                         <th>Click count</th>
-                        <th class="disabled-sorting">Probability</th>
+                        <th class="disabled-sorting">Output</th>
                       </tr>
                     </thead>
                     <tfoot>
@@ -86,49 +97,25 @@ gapi.analytics.ready(function() {
   .then(function(response) {
 //firebaselogin    
     (function(){
-   var ref = database.ref('selection');  
-// Bring snapshots of 30 seconds and persist to object object
-  for (var i = 0; i < response.result.rows.length; i++) {
-    if (response.result.rows[i][0] == 30) { 
-    var dbSelection = JSON.parse(response.result.rows[i][1]);
-    console.log(dbSelection);
-    ref.push(dbSelection);}}
-// Bring all information and persist to database all object
-  
-  var ref = database.ref('all');  
-  ref.child('date').equalTo(111).on("value", function(snapshot) {console.log("Está 111? " + snapshot.val())});
-  ref.on('value', capBeto);
-  var arr;
-  console.log(response);
-
-  function capBeto(data1){
-    console.log("go");
-    arr = data1.val();
-    console.log(arr);
-    console.log(response.result.rows);
-
-//iterate all elements from google analytics real time
-  for (var i = 0; i < response.result.rows.length; i++) {
-    //for each element compare with the database
-    console.log(response.result.rows[i][1].date);
-    for (var k = 0; k < arr.length ; k++) {
-        //shall the item not exist on the database persist to database
-        console.log(arr[k].date);
-        if(response.result.rows[i][1].date !== arr[k].date){  
-            if(i == response.result.rows.length) {
-                var dbAll = JSON.parse(response.result.rows[i][1]);
-                ref.push(dbAll);
-                                                  }
-                                                           }
-                                          }
-                                                        }
-                            }    
+  for (var i = 0; i < response.result.rows.length; i++){
+//Bring all information and persist to database all object 
+  var google_date = JSON.parse(response.result.rows[i][1]).date;
+  database.ref('all').orderByChild('date').equalTo(google_date).on("value", found, not_found);
+  function found(snapshot){
+    var key = Object.keys(snapshot.val())[0];
+    //if exists already, erase this last value
+    database.ref('all').child(key).remove();}
+//update the new value  
+    var new_val = JSON.parse(response.result.rows[i][1]);
+    database.ref('all').push(new_val);                 
+    function not_found(){console.log("error en query de busqueda de fecha");}
+                                                        }  
 }());
 
 
   }).then(null, function(err) {
       var div = document.getElementById('divDiv');
-      div.innerHTML += 'No recent activity has been recorded in the past 25 seconds. Enter <a href = "http://cnn.cl/categoria/internacional"> here </a> to generate data in real time.';
+      div.innerHTML += 'No recent activity has been recorded in the past 25 seconds. Enter <a href = {{url}}> here </a> to generate data in real time.';
       console.log("probably no data");
       console.log(err);
   });
