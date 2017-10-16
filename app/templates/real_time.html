@@ -99,17 +99,17 @@ gapi.analytics.ready(function() {
     (function(){
   for (var i = 0; i < response.result.rows.length; i++){
 //Bring all information and persist to database all object 
-  var google_date = JSON.parse(response.result.rows[i][1]).date;
-  database.ref('all').orderByChild('date').equalTo(google_date).on("value", found, not_found);
-  function found(snapshot){
-    var key = Object.keys(snapshot.val())[0];
-    //if exists already, erase this last value
-    database.ref('all').child(key).remove();}
-//update the new value  
-    var new_val = JSON.parse(response.result.rows[i][1]);
+    var google_date = JSON.parse(response.result.rows[i][1]).date;
+    database.ref('all').orderByChild('date').equalTo(google_date).on("value", found, not_found);
+    function found(snapshot){
+      var key = Object.keys(snapshot.val())[0];
+      //if exists already, erase this last value
+      database.ref('all').child(key).remove();}
+      //update the new value  
+      var new_val = JSON.parse(response.result.rows[i][1]);
     database.ref('all').push(new_val);                 
     function not_found(){console.log("error en query de busqueda de fecha");}
-                                                        }  
+  }  
 }());
 
 
@@ -120,7 +120,6 @@ gapi.analytics.ready(function() {
       console.log(err);
   });
 });
-
 
 (function(){
                       var ref = database.ref('all');
@@ -144,14 +143,14 @@ gapi.analytics.ready(function() {
                         if (objective == "") {objective = 0};
                         var tbl = document.getElementById("lista");
                         var tr = tbl.insertRow();
-                    tr.insertCell().appendChild(document.createTextNode(date));
-                    tr.insertCell().appendChild(document.createTextNode(userId));
-                    tr.insertCell().appendChild(document.createTextNode(clientId));
-                    //pass timer to day and hour
-                    tr.insertCell().appendChild(document.createTextNode(timer));
-                    tr.insertCell().appendChild(document.createTextNode(mouseMax));
-                    tr.insertCell().appendChild(document.createTextNode(clickCount));
-                    tr.insertCell().appendChild(document.createTextNode(objective));
+                        tr.insertCell().appendChild(document.createTextNode(date));
+                        tr.insertCell().appendChild(document.createTextNode(userId));
+                        tr.insertCell().appendChild(document.createTextNode(clientId));
+                        //pass timer to day and hour
+                        tr.insertCell().appendChild(document.createTextNode(timer));
+                        tr.insertCell().appendChild(document.createTextNode(mouseMax));
+                        tr.insertCell().appendChild(document.createTextNode(clickCount));
+                        tr.insertCell().appendChild(document.createTextNode(objective));
                        }
                       }   
                       function errData(err){
@@ -160,6 +159,28 @@ gapi.analytics.ready(function() {
                           }
             }());
     
+
+    (function(){
+                    var ref = database.ref('all');
+                    ref.on('value', gotData, errData);
+                    function gotData(data){
+                      data.forEach(function(child){
+                        var value = child.val();
+                        if (value.objective == "") {value.objective = 0};
+                        //si el monto no fue evaluado y si el el timmer es mayor a 20
+                        //la red neuronal nos sirve para predecir si va a seguir leyendo o no ("engagement metric")
+                        $.ajax({
+                                  url:"/test1", //the page containing python script
+                                  type: "post", //request type,
+                                  data: {registration: "success", name: "xyz", email: "abc@gmail.com"},
+                                  success: function(response){
+                                  console.log(response);},
+                                  error: function(error){console.log(error);}
+                               });
+
+                                                  })
+                    }
+}());
 
 
             </script>

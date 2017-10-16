@@ -16,11 +16,8 @@ def main():
 		main()
 
 # Builing the model:
-  
   #Step 0: download Google dataset data using scitylana.com/
-
   # In this case we are going to use .csv dataset input
-
   #Step 1: load data using numpy.
 @app.route('/foo', methods=['GET','POST'])
 def tensor(matrix):

@@ -181,9 +181,7 @@ def test1():
 #######################
 #   NUMPY  CLASSIFY   #
 #######################
-
 #input website data in the Neuralnetwork
-
 from numpy import exp, array, random, dot
 class NeuralNetwork():
     def __init__(self):
